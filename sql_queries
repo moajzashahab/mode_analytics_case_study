@@ -1,0 +1,29 @@
+--Query 1
+SELECT 
+COUNT(user_id) as users,
+created_at as day
+FROM tutorial.yammer_users 
+ WHERE created_at >= '2014-07-01'
+   AND created_at < '2014-09-01'
+GROUP BY created_at
+
+--Query 2
+SELECT occurred_at as day, 
+  COUNT(DISTINCT CASE WHEN event_name LIKE 'view_inbox'
+    THEN event_type ELSE NULL END) AS view_inbox
+FROM tutorial.yammer_events 
+WHERE occurred_at >= '2014-07-01'
+  AND occurred_at < '2014-09-01'
+GROUP BY 1
+ORDER BY 1
+
+--Query 3
+SELECT occurred_at AS day,
+       COUNT(CASE WHEN action = 'sent_reengagement_email' THEN user_id ELSE NULL END) AS reengagement,
+       COUNT(CASE WHEN action = 'email_open' THEN user_id ELSE NULL END) AS open,
+       COUNT(CASE WHEN action = 'email_clickthrough' THEN user_id ELSE NULL END) AS clickthroughs
+  FROM tutorial.yammer_emails 
+WHERE occurred_at >= '2014-07-01'
+  AND occurred_at < '2014-09-01'
+ GROUP BY 1
+ ORDER BY 1
